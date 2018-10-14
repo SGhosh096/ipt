@@ -1,0 +1,52 @@
+Bean:
+
+@Stateful
+public class bean implements beanRemote {
+int balance = 100000;
+    @Override
+    public int withdraw(int amount) {
+        return balance-amount;
+    }
+    @Override
+    public int deposit(int amount) {
+        return balance+amount;
+    }
+}
+ 
+
+Application:
+package bankclient;
+import bank1.beanRemote;
+import java.util.Scanner;
+import javax.ejb.EJB;
+public class Main {
+ 
+
+    @EJB
+    private static beanRemote bean;
+    public static void main(String[] args) {
+        int choice;
+        int no;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter amount");
+            no = sc.nextInt();
+        for(int i=1;i<5;i++)
+        {
+            
+            System.out.println("Enter choice");
+            choice = sc.nextInt();
+            if(choice==1)
+            {
+                System.out.println(bean.withdraw(no));
+            }
+            else if(choice == 2)
+            {
+                System.out.println(bean.deposit(no));
+            }
+            else
+            {
+                break;
+            }
+    }
+    }
+}

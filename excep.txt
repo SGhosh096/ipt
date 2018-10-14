@@ -1,0 +1,87 @@
+Java file---
+
+package exp1cjava;
+public class Exp1cJava {
+static{
+System.load("C:\\Users\\rahul\\Documents\\NetBeansProjects\\exp1cC\\dest\\myout.dll");
+}
+
+//javah -o head.h -jni -classpath ../../build/classes exp1cjava.Exp1cJava
+private native int intMethod(int a,int b);
+private native boolean booleanMethod(boolean text);
+private native String stringMethod(String text1);
+private native void catchThrow() throws IllegalArgumentException;
+private void callback() throws NullPointerException 
+{
+throw new NullPointerException("thrown in CatchThrow.callback");
+}
+public static void main(String[] args) {
+Exp1cJava c = new Exp1cJava();
+int prod=c.intMethod(5,7);
+boolean b=c.booleanMethod(true);
+String str=c.stringMethod("lol");
+System.out.println("product of number="+prod);
+System.out.println("BOOLEAN="+b);
+System.out.println("STRING="+str);
+try {
+c.catchThrow();
+} catch (Exception e) {
+System.out.println("In Java:\n " + e);
+}
+}
+}
+
+ 
+
+C file---
+
+ 
+
+#include 
+#include 
+#include "head.h"
+#include
+
+JNIEXPORT jint JNICALL Java_exp1cjava_Exp1cJava_intMethod(JNIEnv *env, jobject obj, jint a, jint b){
+jint c=a*b;
+return c;
+}
+
+JNIEXPORT jboolean JNICALL Java_exp1cjava_Exp1cJava_booleanMethod (JNIEnv *env, jobject obj, jboolean b){
+jboolean boo=!b;
+return boo;
+}
+
+JNIEXPORT jstring JNICALL Java_exp1cjava_Exp1cJava_stringMethod(JNIEnv *env, jobject obj, jstring str){
+const jbyte *s;
+s=(*env)->GetStringUTFChars(env,str,NULL);
+char *strr;
+strr=strupr(s);
+jstring js2=(*env)->NewStringUTF(env,strr);
+return js2;
+}
+
+JNIEXPORT void JNICALL Java_exp1cjava_Exp1cJava_catchThrow(JNIEnv *env, jobject obj){
+jclass cls = (*env)->GetObjectClass(env, obj);
+jmethodID mid = (*env)->GetMethodID(env, cls, "callback", "()V");
+jthrowable exc;
+if (mid == 0) {
+return;
+}
+(*env)->CallVoidMethod(env, obj, mid);
+exc = (*env)->ExceptionOccurred(env);
+if (exc) {
+
+jclass newExcCls;
+
+(*env)->ExceptionDescribe(env);
+(*env)->ExceptionClear(env);
+
+newExcCls = (*env)->FindClass(env, "java/lang/IllegalArgumentException");
+if (newExcCls == 0) { 
+return;
+}
+(*env)->ThrowNew(env, newExcCls, "thrown from C code");
+}
+
+}

@@ -1,0 +1,59 @@
+package exp1bjava;
+import java.util.Scanner;
+
+public class Exp1bJava {
+
+static
+{
+System.load("C:\\Users\\rahul\\Documents\\NetBeansProjects\\exp1bC\\dest\\myout.dll");
+}
+//javah -o head.h -jni -classpath ../../build/classes exp1bjava.Exp1bJava
+public static void main(String[] args) {
+Scanner sc =new Scanner(System.in);
+System.out.println("Enter the length");
+int length=sc.nextInt();
+int Inarray[]=new int[length];
+System.out.println("Enter the elements");
+for(int i=0;i<length;i++){
+Inarray[i]=sc.nextInt();
+}
+
+Exp1bJava obj =new Exp1bJava();
+int orray[]=obj.Sorting(Inarray);
+System.out.println();
+for(int i=0;i<length;i++){
+
+System.out.println(orray[i]);
+}
+}
+
+private native int[] Sorting(int[] Inarray);
+
+}
+
+ 
+
+C file---
+
+#include 
+#include 
+#include "head.h"
+#include
+JNIEXPORT jintArray JNICALL Java_exp1bjava_Exp1bJava_Sorting
+(JNIEnv * env, jobject obj, jintArray arr)
+{
+jint *array=(*env)->GetIntArrayElements(env,arr,NULL);
+if (NULL == arr) return NULL;
+jsize len=(*env)->GetArrayLength(env,arr);
+jintArray outarr=(*env)->NewIntArray(env,len);
+for(jsize x = 0; x <len; x++){
+for(jsize y = 0; y if(array[y] > array[y+1]){
+jsize temp = array[y+1];
+array[y+1] = array[y];
+array[y] = temp;
+}
+}
+}
+(*env)->SetIntArrayRegion(env,outarr, 0,len, array);
+return outarr;
+}

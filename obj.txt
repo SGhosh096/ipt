@@ -1,0 +1,58 @@
+Java file---
+
+package exp1ajava;
+public class Exp1aJava {
+static
+{
+System.load("C:\\Users\\rahul\\Documents\\NetBeansProjects\\exp1aC\\dest\\myd.dll");
+}
+
+//javah -o head.h -jni -classpath ../../build/classes exp1ajava.Exp1aJava
+public static void main(String[] args) {
+
+SimpleClass sc=new SimpleClass();
+sc.count=10;
+sc.Increment();
+System.out.println("Value before method call = "+sc.count);
+
+new Exp1aJava().changecountvalue(sc);
+
+System.out.println("Value after method call = "+sc.count);
+}
+
+private native void changecountvalue(SimpleClass sc);
+
+}
+
+class SimpleClass 
+{
+int count;
+public void Increment()
+{
+count=count*10;
+System.out.println("Count value = "+count);
+}
+}
+
+ 
+
+C file---
+
+#include 
+#include 
+#include "head.h"
+#include 
+//-Wl,--add-stdcall-alias -shared -m64
+JNIEXPORT void JNICALL Java_exp1ajava_Exp1aJava_changecountvalue
+(JNIEnv * env, jobject cls, jobject obj)
+{
+cls=(*env)->GetObjectClass(env,obj);
+jfieldID fid=(*env)->GetFieldID(env,cls,"count","I");
+int value=(*env)->GetIntField(env,obj,fid);
+printf("\nNative count value = %d\n ", value);
+printf("\nChanging the count value in C:-");
+(*env)->SetIntField(env,obj,fid,200);
+
+jmethodID mid=(*env)->GetMethodID(env,cls,"Increment","()V");
+(*env)->CallVoidMethod(env,obj,mid); 
+}

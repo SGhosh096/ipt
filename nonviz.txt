@@ -1,0 +1,108 @@
+package pack1;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+public class exp2a {
+
+private String date;
+public String getDate() {
+return date;
+}
+public void setDate(String date) {
+this.date = date;
+}
+
+private long acc_no;
+public long getAcc_no() {
+return acc_no;
+}
+public void setAcc_no(long acc_no) {
+this.acc_no = acc_no;
+}
+
+private String name;
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+
+private double withdraw_amt;
+public double getWithdraw_amt() {
+return withdraw_amt;
+}
+public void setWithdraw_amt(double withdraw_amt) {
+this.withdraw_amt = withdraw_amt;
+}
+
+private final double balance_amt = 100000;
+public double getBalance_amt() {
+return balance_amt;
+}
+
+public void generate_SystemDate() 
+{ 
+Calendar cal = new GregorianCalendar(); 
+int month = cal.get(Calendar.MONTH); 
+int year = cal.get(Calendar.YEAR); 
+int day = cal.get(Calendar.DAY_OF_MONTH); 
+setDate("Date is : " + day + "/" + (month + 1) + "/" + year); 
+} 
+
+public double current_Balance() 
+{ 
+double balance = balance_amt-withdraw_amt; 
+if(withdraw_amt>balance_amt) 
+{ 
+return balance_amt; 
+} 
+else 
+{ 
+return balance; 
+} 
+}
+}
+
+ 
+
+Frame.java file --
+
+ 
+
+public class Frame_2a extends javax.swing.JFrame {
+
+/**
+* Creates new form Frame_2a
+*/
+public Frame_2a() {
+initComponents();
+exp2a1.generate_SystemDate();
+dateLabel.setText(exp2a1.getDate()); 
+
+}
+
+private void okBtnActionPerformed(java.awt.event.ActionEvent evt) { 
+
+exp2a1.setName(nameEdit.getText()); 
+exp2a1.setAcc_no(Long.parseLong(accEdit.getText())); 
+double bala=exp2a1.getBalance_amt(); 
+Double balance = new Double(bala); 
+balEdit.setText(Double.toString(bala)); 
+exp2a1.setWithdraw_amt(Double.parseDouble(withEdit.getText())); 
+double current_balance=exp2a1.current_Balance(); 
+Double current_bala = new Double(current_balance); 
+balLabel.setText(current_bala.toString()); 
+}
+
+private void msgBtnActionPerformed(java.awt.event.ActionEvent evt) { 
+
+String Message="Balance in your Account No:"+exp2a1.getAcc_no()+ 
+" as on "+ dateLabel.getText()+" is :"+ exp2a1.getBalance_amt(); 
+JOptionPane.showMessageDialog(null, Message, "SMS", 1); 
+
+
+}
+
+}

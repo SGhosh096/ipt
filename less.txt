@@ -1,0 +1,49 @@
+package shop1;
+import javax.ejb.Stateless;
+@Stateless
+public class shopbean implements shopbeanRemote {
+@Override
+public int addItem(int item) {
+return item+1;
+}
+@Override
+public int removeItem(int item) {
+return item-1;
+}
+}
+ 
+
+Application:
+package exp3bclient;
+import java.util.Scanner;
+import javax.ejb.EJB;
+import shop1.shopbeanRemote;
+public class Main {
+@EJB
+private static shopbeanRemote shopbean;
+public static void main(String[] args) {
+int choice;
+int no;
+Scanner sc = new Scanner(System.in);
+System.out.println("Enter item");
+no = sc.nextInt();
+for(int i=1;i<5;i++)
+{ 
+System.out.println("Enter choice");
+choice = sc.nextInt();
+if(choice==1)
+{
+System.out.println(shopbean.removeItem(no));
+}
+else if(choice == 2)
+{
+System.out.println(shopbean.addItem(no));
+}
+else
+{
+continue;
+}
+}
+}
+}
+
